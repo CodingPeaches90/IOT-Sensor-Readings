@@ -1,0 +1,144 @@
+<!--
+   Animations i got from this place : https://codepen.io/theDeanH/pen/zBZXLN
+
+   Button i directly copied : https://codepen.io/onediv/pen/jEmjap
+-->
+<!--
+  The three images can be seen here :
+  https://www.flaticon.com/free-icon/humidity_1113723
+  https://www.flaticon.com/free-icon/idea_427735#term=light&page=1&position=9
+  https://www.flaticon.com/free-icon/hot_1182999
+
+
+-->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Charts for my Sensors</title>
+   	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+   	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://dweet.io/client/dweet.io.min.js"></script>
+   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+<body>
+<style>
+   body {
+        font-family: 'Roboto', serif;
+        font-size: 16px;
+        background-color: #202c39;
+
+   }
+   h2,h3{
+      text-align: center;
+      color: #93a8ac;
+   }
+   .images{
+      text-align:center;
+      margin:5px 20px;
+     padding:5px;
+
+   }
+   .images img{
+
+     display:inline-block;
+
+     margin:0 1% 0 1%;
+
+   }
+
+   img:hover {
+     -webkit-animation-name: wiggle;
+     -ms-animation-name: wiggle;
+     -ms-animation-duration: 1000ms;
+     -webkit-animation-duration: 1000ms;
+     -webkit-animation-iteration-count: 1;
+     -ms-animation-iteration-count: 1;
+     -webkit-animation-timing-function: ease-in-out;
+     -ms-animation-timing-function: ease-in-out;
+   }
+
+   @-webkit-keyframes wiggle {
+     0% {-webkit-transform: rotate(10deg);}
+     25% {-webkit-transform: rotate(-10deg);}
+     50% {-webkit-transform: rotate(20deg);}
+     75% {-webkit-transform: rotate(-5deg);}
+     100% {-webkit-transform: rotate(0deg);}
+   }
+
+   @keyframes wiggle {
+     0% {transform: rotate(10deg);}
+     25% {transform: rotate(-10deg);}
+     50% {transform: rotate(20deg);}
+     75% {transform: rotate(-5deg);}
+     100% {transform: rotate(0deg);}
+   }
+
+   button{
+     background:#93a8ac;
+     color:#fff;
+     border:none;
+     position:relative;
+     height:60px;
+     font-size:1.6em;
+     padding:0 2em;
+     cursor:pointer;
+     transition:800ms ease all;
+     outline:none;
+     margin:auto;
+     display:block;
+   }
+   button:hover{
+     background:#202c39;
+     color:#93a8ac;
+   }
+   button:before,button:after{
+     content:'';
+     position:absolute;
+     top:0;
+     right:0;
+     height:8px;
+     width:0;
+     background: #98d9c2;
+     transition:400ms ease all;
+   }
+   button:after{
+     right:inherit;
+     top:inherit;
+     left:0;
+     bottom:0;
+   }
+   button:hover:before,button:hover:after{
+     width:100%;
+     transition:900ms ease all;
+   }
+
+
+
+</style>
+
+<header>
+  <h2> Charts for the Sensors - Using Dweet </h2>
+</header>
+
+<br><br>
+
+<div class="images">
+   <img src="../images/hot.png"/>
+   <img src="../images/humidity.png"/>
+   <img src="../images/idea.png"/>
+</div>
+<br><br><br>
+
+<div class="button-div">
+   <button onclick="window.location.href='mycharts.html' ">See Charts!</button>
+</div>
+
+
+
+
+</body>
+<br><br>
+<br>
+<br>
+<footer><h3>By Jordan May - x15515673</h3></footer>
+</html>

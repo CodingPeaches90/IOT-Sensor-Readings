@@ -1,0 +1,667 @@
+
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Sensor Data</title>
+   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+   	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://dweet.io/client/dweet.io.min.js"></script>
+	   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+</head>
+
+<body>
+   <style>
+         div.backBtn {
+     width: 100px;
+     left: 25px;
+     top: 25px;
+     background-color: #f4f4f4;
+     transition: all 0.4s ease;
+     position: fixed;
+     cursor: pointer;
+   }
+
+   span.line {
+     bottom: auto;
+     right: auto;
+     top: auto;
+     left: auto;
+     background-color: #93a8ac;
+     border-radius: 10px;
+     width: 100%;
+     left: 0px;
+     height: 2px;
+     display: block;
+     position: absolute;
+     transition: width 0.2s ease 0.1s, left 0.2s ease, transform 0.2s ease 0.3s, background-color 0.2s ease;
+   }
+
+   span.tLine {
+     top: 0px;
+   }
+
+   span.mLine {
+     top: 13px;
+     opacity: 0;
+   }
+
+   span.bLine {
+     top: 26px;
+   }
+
+   .label {
+     position: absolute;
+     left: 0px;
+     top: 5px;
+     width: 100%;
+     text-align: center;
+     transition: all 0.4s ease;
+     font-size: 1em;
+     color: #93a8ac;
+   }
+
+   div.backBtn:hover span.label {
+     left: 25px
+   }
+
+   div.backBtn:hover span.line {
+     left: -10px;
+     height: 5px;
+     background-color: #93a8ac;
+   }
+
+   div.backBtn:hover span.tLine {
+     width: 25px;
+     transform: rotate(-45deg);
+     left: -15px;
+     top: 6px;
+   }
+
+   div.backBtn:hover span.mLine {
+     opacity: 1;
+     width: 30px;
+   }
+
+   div.backBtn:hover span.bLine {
+     width: 25px;
+     transform: rotate(45deg);
+     left: -15px;
+     top: 20px;
+   }
+   a{
+      color: #93a8ac;
+      text-decoration: none;
+   }
+   </style>
+   <h2>Sensor Data</h2>
+   <div class="backBtn" href="https://iot-test-gordons.c9users.io/index.html">
+      <span class="line tLine"></span>
+      <span class="line mLine"></span>
+      <span class="label"><a href = "https://iot-test-gordons.c9users.io/index.html">Back</a></span>
+      <span class="line bLine"></span>
+	</div>
+
+<div id="container" style="width: 800px; height: 400px; margin: 0 auto"></div>
+<br>
+<hr>
+<br>
+<div id="container2" style="width: 800px; height: 400px; margin: 0 auto"></div>
+<br>
+<hr>
+<br>
+<div id="container3" style="width: 800px; height: 400px; margin: 0 auto"></div>
+
+<style>
+   body {
+        font-family: 'Roboto', serif;
+        font-size: 16px;
+        background-color: #202c39;
+
+   }
+   h2,h3{
+      text-align: center;
+      color: #93a8ac;
+   }
+</style>
+
+<!-- This code themes our charts -->
+<!--
+   Code from - https://forum.highcharts.com/viewtopic.php?f=9&t=5586
+   I customized the code to suit the theme of the website
+-->
+<!--
+   button code came from - > https://codepen.io/Benco/pen/PZQovP
+-->
+<script language = "Javascript">
+   // Apply the grey theme
+Highcharts.setOptions({
+   colors: ["#202c39","#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee",
+      "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
+   chart: {
+      backgroundColor: "rgba(32 44 57)",
+      borderWidth: 0,
+      borderRadius: 15,
+      plotBackgroundColor: "rgba(147 168 172)",
+      plotShadow: false,
+      plotBorderWidth: 0
+   },
+   title: {
+      style: {
+         color: '#93a8ac',
+         font: '22px roboto,sans-serif'
+      }
+   },
+   subtitle: {
+      style: {
+         color: '#DDD',
+         font: '12px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
+      }
+   },
+   xAxis: {
+      gridLineWidth: 0,
+      lineColor: '#93a8ac',
+      tickColor: '#93a8ac',
+      labels: {
+         style: {
+            color: '#93a8ac',
+            fontWeight: 'bold'
+         }
+      },
+      title: {
+         style: {
+            color: '#93a8ac',
+            font: 'bold 14px Roboto, Verdana, Arial, Helvetica, sans-serif'
+         }
+      }
+   },
+   yAxis: {
+      alternateGridColor: null,
+      minorTickInterval: null,
+      gridLineColor: 'rgba(32, 44, 57)',
+      lineWidth: 0,
+      tickWidth: 0,
+      labels: {
+         style: {
+            color: '#93a8ac',
+            fontWeight: 'bold'
+         }
+      },
+      title: {
+         style: {
+            color: '#93a8ac',
+            font: 'bold 14px Roboto,Arial, Helvetica, sans-serif'
+         }
+      }
+   },
+   legend: {
+      itemStyle: {
+         color: '#CCC'
+      },
+      itemHoverStyle: {
+         color: '#FFF'
+      },
+      itemHiddenStyle: {
+         color: '#333'
+      }
+   },
+   credits: {
+      style: {
+         right: '50px'
+      }
+   },
+   labels: {
+      style: {
+         color: '#CCC'
+      }
+   },
+   tooltip: {
+      backgroundColor:"rgba(32 44 57)",
+
+      borderWidth: 0,
+      style: {
+         color: '#FFF'
+      }
+   },
+
+
+   plotOptions: {
+      line: {
+         dataLabels: {
+            color: '#202c39'
+         },
+         marker: {
+            lineColor: '#202c39'
+         }
+      },
+      spline: {
+         marker: {
+            lineColor: '#202c39'
+         }
+      },
+      scatter: {
+         marker: {
+            lineColor: '#202c39'
+         }
+      }
+   },
+
+   toolbar: {
+      itemStyle: {
+         color: '#202c39'
+      }
+   }
+});
+</script>
+
+<script language="JavaScript">
+var tempData = []
+var humData = []
+var lightData = []
+var dic = [];
+
+
+array_for_cats = []
+
+$(document).ready(function() {
+	var name = 'captionsjordaniot'
+
+
+	/* Temperature Chart - Shows in degrees */
+   var chart = {
+      type: 'spline',
+	  animation: Highcharts.svg, // don't animate in IE < IE 10.
+      marginRight: 10,
+   };
+   var title = {
+      text: 'Temperature Chart'
+   };
+   var xAxis = {
+      title: {
+         text: 'Time'
+      },
+      type: 'datetime',
+      tickPixelInterval: 150,
+
+   };
+   var yAxis = {
+      title: {
+         text: 'Celcius'
+      },
+      plotLines: [{
+         value: 0,
+         width: 1,
+         color: '#808080'
+      }]
+   };
+   var tooltip = {
+      formatter: function () {
+      return '<b>' + this.series.name + '</b><br/>' +
+         Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+         Highcharts.numberFormat(this.y, 2);
+      }
+   };
+   var plotOptions = {
+      area: {
+         pointStart: 1940,
+         marker: {
+            enabled: false,
+            symbol: 'circle',
+            radius: 2,
+            states: {
+               hover: {
+                 enabled: true
+               }
+            }
+         }
+      }
+   };
+   var legend = {
+      enabled: false
+   };
+   var exporting = {
+      enabled: false
+   };
+   /* end of Temperature Chart Declaration */
+   /* Humidity Chart */
+
+   var chart2 = {
+      type: 'spline',
+      animation: Highcharts.svg,
+      marginRight: 10,
+   }
+   var title2 = {
+      text: 'Humidity Data'
+   };
+   var xAxis2 = {
+      type: 'datetime',
+      tickPixelInterval: 150
+   };
+   var yAxis2 = {
+      title: {
+         text: '% Humidity'
+      },
+      plotLines: [{
+         value: 0,
+         width: 1,
+         color: '#808080'
+      }]
+   };
+   var tooltip2 = {
+      formatter: function(){
+         return '<b>' + this.series.name + '</b><br/>' + Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' + Highcharts.numberFormat(this.y, 2);
+      }
+   };
+   var plotOptions2 = {
+      area: {
+         pointStart: 1940,
+         marker: {
+            enabled: false,
+            symbol: 'circle',
+            radius: 2,
+            states: {
+               hover: {
+                  enabled: true
+               }
+            }
+         }
+      }
+   };
+   var legend2 = {
+      enabled: false
+   };
+   var exporting2 = {
+      enabled: false
+   };
+
+   /* end of humidity chart */
+   /* Light Sensor information */
+
+   var chart3 = {
+      type: 'spline',
+      animation: Highcharts.svg,
+      marginRight: 10,
+   };
+   var title3 = {
+      text: 'Light Sensor'
+   };
+   var xAxis3 = {
+     type: 'datetime',
+     tickPixelInterval: 150
+   };
+   var yAxis3 = {
+      type: {
+         text: 'Light Range'
+      },
+      plotLines: [{
+         value: 0,
+         width: 1,
+         color: '#808080'
+      }]
+   };
+   var tooltip3 = {
+      formatter: function(){
+         return '<b>' + this.series.name + '</b><br/>' + Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' + Highcharts.numberFormat(this.y, 2);
+      }
+   };
+   var plotOptions3 = {
+      area : {
+         pointStart: 1940,
+         marker: {
+            enabled: false,
+            symbol: 'circle',
+            radius: 2,
+            states: {
+               hover: {
+                  enabled: true
+               }
+            }
+
+         }
+      }
+   };
+   var legend3 = {
+      enabled: false
+   };
+   var exporting3 = {
+      enabled: false
+   };
+   /* end of Light Sensor */
+   /* ====================================== */
+   /* We can now store our series and listen for dweets and update our charts */
+
+   var temperatureSeries = []
+   var humiditySeries = []
+   var lightSeries = []
+
+	dweetio.get_all_dweets_for(name, function(err, dweets){
+		console.log(err)
+		/* ======== Temperature Block ========== */
+	    for(theDweet in dweets.reverse())
+	    {
+	        var dweet = dweets[theDweet];
+
+	        val = dweet.content["Temperature"]
+			tempData.push(parseInt(val))
+			array_for_cats.push(dweet.created)
+	    }
+		console.log(tempData)
+
+		temperatureSeries= [{
+	      name: 'Temperature in degrees celcius',
+	      data: tempData
+	   }]
+      /* ========= End Temperature Block ========== */
+      /* ========= Humidty Block ============ */
+      for(theDweet in dweets.reverse())
+      {
+         var dweet2 = dweets[theDweet];
+         val2 = dweet.content["Humidity"]
+         humData.push(parseInt(val2))
+         array_for_cats.push(dweet.created)
+      }
+      console.log(humData)
+
+      humiditySeries = [{
+         name: 'Humidity',
+         data: humData
+      }]
+      /* End Humidity */
+      /* Light Block */
+      for(theDweet in dweets.reverse())
+      {
+         var dweet3 = dweets[theDweet];
+         val3 = dweet.content["Light"]
+         lightData.push(parseInt(val3))
+         array_for_cats.push(dweet.created)
+      }
+      console.log(lightData)
+
+      lightSeries = [{
+         name: 'Light',
+         data: lightData
+      }]
+
+      /* End of Light Block */
+
+      /* JSON for temperature + adding the div and updating the temperature*/
+	   var json = {};
+	   json.chart = chart;
+	   json.title = title;
+	   json.tooltip = tooltip;
+	   json.xAxis = xAxis;
+	   json.yAxis = yAxis;
+	   json.legend = legend;
+	   json.exporting = exporting;
+	   json.series = temperatureSeries;
+	   json.plotOptions = plotOptions;
+
+
+	   Highcharts.setOptions({
+	      global: {
+	         useUTC: false
+	      }
+
+	   });
+	   $('#container').highcharts(json);
+		chart = $('#container').highcharts()
+		chart.xAxis[0].update({categories: array_for_cats}, true);
+
+		/* End */
+		/* Humidty */
+		var json2 = {};
+		json2.chart = chart2;
+		json2.title = title2;
+	   json2.tooltip = tooltip2;
+	   json2.xAxis = xAxis2;
+	   json2.yAxis = yAxis2;
+	   json2.legend = legend2;
+	   json2.exporting = exporting2;
+	   json2.series = humiditySeries;
+	   json2.plotOptions = plotOptions2;
+
+	   Highcharts.setOptions({
+	      global: {
+	         useUTC: false
+	      }
+	   });
+	   $('#container2').highcharts(json2);
+		chart = $('#container2').highcharts()
+		chart.xAxis[0].update({categories: array_for_cats}, true);
+
+	   /* end humidty */
+	   /* Light */
+	   var json3 = {};
+	   json3.chart = chart3;
+	   json3.title = title3;
+	   json3.tooltip = tooltip3;
+	   json3.xAxis = xAxis3;
+	   json3.yAxis = yAxis3;
+	   json3.legend = legend3;
+	   json3.exporting = exporting3;
+	   json3.series = temperatureSeries;
+	   json3.plotOptions = plotOptions3;
+
+	   Highcharts.setOptions({
+	      global: {
+	         useUTC: false
+	      }
+	   });
+	   $('#container3').highcharts(json3);
+		chart = $('#container3').highcharts()
+		chart.xAxis[0].update({categories: array_for_cats}, true);
+	   /* end Light */
+	});
+
+	dweetio.listen_for(name, function(dweet){
+	      val = dweet.content["temperature"]
+	      temperatureStoreInLocalStorage(val)
+			console.log("happened1",val)
+			var chart = $('#container').highcharts();
+			chart.series[0].addPoint(parseInt(val));
+			array_for_cats.push(dweet.created)
+			chart.xAxis[0].update({categories: array_for_cats}, true);
+	});
+
+	dweetio.listen_for(name, function(dweet2){
+	      val2 = dweet2.content["humidity"]
+	      humidityStoreInLocalStorage(val2)
+			console.log("happened2",val2)
+			var chart2 = $('#container2').highcharts();
+			chart2.series[0].addPoint(parseInt(val2));
+			array_for_cats.push(dweet2.created)
+			chart.xAxis[0].update({categories: array_for_cats}, true);
+	});
+
+	dweetio.listen_for(name, function(dweet3){
+	      val3 = dweet3.content["light"]
+	      lightStoreInLocalStorage(val3)
+			console.log("happened3",val3)
+			var chart3 = $('#container3').highcharts();
+			chart3.series[0].addPoint(parseInt(val3));
+			array_for_cats.push(dweet3.created)
+			chart.xAxis[0].update({categories: array_for_cats}, true);
+
+
+	});
+
+});
+
+var temperatureStore = []
+var humidityStore = []
+var lightStore = []
+
+function temperatureStoreInLocalStorage(value1)
+{
+
+   var temp = value1
+
+
+   var tSize = temperatureStore.length
+
+   if(tSize > 100)
+   {
+      temperatureStore.shift()
+   }
+
+   temperatureStore.push(temp)
+
+   localStorage["temperatureStore"] = JSON.stringify(temperatureStore);
+
+
+}
+function humidityStoreInLocalStorage(value2)
+{
+   var hum = value2
+
+   var hSize = humidityStore.length
+
+   if(hSize > 100)
+   {
+      humidityStore.shift()
+   }
+
+   humidityStore.push(hum)
+
+   localStorage["humidityStore"] = JSON.stringify(humidityStore);
+
+}
+function lightStoreInLocalStorage(value3)
+{
+   var light = value3
+
+   var lSize = lightStore.length
+
+   if(lSize > 100)
+   {
+      // if array is more than 100 then we delete one from the last record
+      lightStore.shift()
+   }
+
+   lightStore.push(light)
+
+   localStorage["lightStore"] = JSON.stringify(lightStore);
+
+}
+/*
+function store(v1,v2,v3)
+{
+   // check if VAL1 which is Temperature is defined
+   if(v1 !== "undefined" || v2 !== "undefined" || v3 !== "undefined")
+   {
+      console.log("hit",v1,v2,v3)
+      // if yes then we push to the dict array
+      dic.push({
+         key: "Reading",
+         value: v1 + 'C' + v2 + '%' + v3
+      })
+
+      localStorage.setItem('dic', JSON.stringify(dic));
+   }
+}*/
+
+
+
+</script>
+</body>
+</html>
